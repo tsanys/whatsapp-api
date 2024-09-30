@@ -125,8 +125,7 @@ Example:
 
 ```json
 {
-  "status": "success",
-  "message": "Message sent successfully!"
+    "status": "Message sent successfully"
 }
 ```
 
