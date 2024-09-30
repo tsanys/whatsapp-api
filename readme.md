@@ -77,7 +77,7 @@ Send a text message to a WhatsApp number.
 }
 ```
 
-- `to`: The recipient's phone number, including the country code (e.g., `6287754412191` for an Indonesian number).
+- `to`: The recipient's phone number, including the country code (e.g., `628000000000` for an Indonesian number).
 - `message`: The text message to be sent.
 
 #### Example Curl Command
@@ -86,7 +86,7 @@ Send a text message to a WhatsApp number.
 curl --location 'http://localhost:3000/api/send-message' \
 --header 'Content-Type: application/json' \
 --data '{
-    "to": "6287754412191",
+    "to": "628000000000",
     "message": "lorem ipsum dolor sit amet"
 }'
 ```
@@ -101,7 +101,7 @@ Send a file to a WhatsApp number along with a text message.
 
 #### Form Data
 
-- `to`: The recipient's phone number, including the country code (e.g., `6287754412191`).
+- `to`: The recipient's phone number, including the country code (e.g., `62800000000`).
 - `message`: The accompanying text message (optional).
 - `file`: The file to be sent, uploaded from the user's local system.
 
@@ -109,7 +109,7 @@ Send a file to a WhatsApp number along with a text message.
 
 ```bash
 curl --location 'http://localhost:3000/api/send-file' \
---form 'to="6287754412191"' \
+--form 'to="62800000000"' \
 --form 'message="testing"' \
 --form 'file=@"/path/to/file.png"'
 ```
