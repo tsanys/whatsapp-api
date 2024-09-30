@@ -1,10 +1,11 @@
 # WhatsApp API
 
-This is a simple WhatsApp API built using **Express.js** and **whatsapp-web.js**. It allows you to send messages.
+This is a simple WhatsApp API built using **Express.js** and **whatsapp-web.js**, allowing you to send messages and files via WhatsApp.
 
 ## Features
 
-- Send WhatsApp text and file messages
+- Send WhatsApp text messages
+- Send WhatsApp file messages
 - Integration with WhatsApp Web
 - Built with Express.js and whatsapp-web.js
 
@@ -55,6 +56,80 @@ Make sure you have the following installed:
    - Go to **Settings** > **Linked Devices** > **Link a Device**.
    - Scan the QR Code displayed in the terminal with your phone.
 
-### Usage
+Once you've scanned the QR code, the WhatsApp Web client will connect, and the API will be ready to send messages via WhatsApp.
 
-Once you've scanned the QR code, the WhatsApp Web client will connect and the application will be ready to send messages via the WhatsApp API.
+## API Endpoints
+
+### 1. Send Message
+
+Send a text message to a WhatsApp number.
+
+- **Endpoint**: `/api/send-message`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+
+#### Request Body
+
+```json
+{
+  "to": "<recipient_phone_number>",
+  "message": "<message_text>"
+}
+```
+
+- `to`: The recipient's phone number, including the country code (e.g., `6287754412191` for an Indonesian number).
+- `message`: The text message to be sent.
+
+#### Example Curl Command
+
+```bash
+curl --location 'http://localhost:3000/api/send-message' \
+--header 'Content-Type: application/json' \
+--data '{
+    "to": "6287754412191",
+    "message": "lorem ipsum dolor sit amet"
+}'
+```
+
+### 2. Send File
+
+Send a file to a WhatsApp number along with a text message.
+
+- **Endpoint**: `/api/send-file`
+- **Method**: `POST`
+- **Content-Type**: `multipart/form-data`
+
+#### Form Data
+
+- `to`: The recipient's phone number, including the country code (e.g., `6287754412191`).
+- `message`: The accompanying text message (optional).
+- `file`: The file to be sent, uploaded from the user's local system.
+
+#### Example Curl Command
+
+```bash
+curl --location 'http://localhost:3000/api/send-file' \
+--form 'to="6287754412191"' \
+--form 'message="testing"' \
+--form 'file=@"/path/to/file.png"'
+```
+
+### Response
+
+For both endpoints, a successful response will return:
+
+- **Status**: `200 OK`
+- **Body**: A success message confirming that the message or file was sent successfully.
+
+Example:
+
+```json
+{
+  "status": "success",
+  "message": "Message sent successfully!"
+}
+```
+
+## Conclusion
+
+This API provides simple endpoints to send messages and files via WhatsApp using WhatsApp Web and Express.js. Make sure the client is ready to use the app
