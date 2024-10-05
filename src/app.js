@@ -10,8 +10,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", messageRoutes);
 
-initializeWhatsAppClient();
+async function start() {
+  try {
+    await initializeWhatsAppClient();
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Error starting server", error);
+    process.exit(1);
+  }
+}
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+start();

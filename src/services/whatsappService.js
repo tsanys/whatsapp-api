@@ -1,30 +1,67 @@
-const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
+const { Client, MessageMedia, RemoteAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { formattedNumber } = require("../lib/utils");
+const { MongoStore } = require("wwebjs-mongo");
+const { default: mongoose } = require("mongoose");
+const dotenv = require("dotenv");
 
 let client;
 let isClientReady = false;
 
-exports.initializeWhatsAppClient = () => {
-  client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-      headless: true,
-      args: ["--no-sandbox"],
-    },
-  });
+dotenv.config();
 
-  client.on("qr", (qr) => {
-    console.log("QR RECEIVED", qr);
-    qrcode.generate(qr, { small: true });
-  });
+exports.initializeWhatsAppClient = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("Connected to MongoDB");
 
-  client.on("ready", () => {
-    console.log("Client is ready!");
-    isClientReady = true;
-  });
+    const store = new MongoStore({ mongoose: mongoose });
 
-  client.initialize();
+    console.log("Initializing WhatsApp client...");
+
+    client = new Client({
+      puppeteer: { headless: true, args: ["--no-sandbox"] },
+      authStrategy: new RemoteAuth({
+        store,
+        clientId: "whatsapp",
+        backupSyncIntervalMs: 300000,
+      }),
+    });
+
+    client.on("qr", (qr) => {
+      console.log("QR RECEIVED", qr);
+      qrcode.generate(qr, { small: true });
+    });
+
+    client.on("ready", () => {
+      console.log("Client is ready!");
+      isClientReady = true;
+    });
+
+    client.on("authenticated", () => {
+      console.log("AUTHENTICATED");
+    });
+
+    client.on("remote_session_saved", () => {
+      console.log("REMOTE SESSION SAVED");
+    });
+
+    client.on("auth_failure", (msg) => {
+      console.error("AUTHENTICATION FAILURE", msg);
+    });
+
+    client.on("disconnected", (reason) => {
+      console.log("Client was disconnect, reasong:", reason);
+      isClientReady = false;
+
+      client.initialize();
+    });
+
+    await client.initialize();
+  } catch (error) {
+    console.error("Failed to initialize WhatsApp client:", error.message);
+    isClientReady = false;
+  }
 };
 
 exports.sendWhatsAppMessage = async (to, message) => {
