@@ -40,17 +40,23 @@ Make sure you have the following installed:
    npm install
    ```
 
+4. **Make .env and add your MongoDB URI**:
+
+   ```bash
+   cp .env.example .env
+   ```
+
 ### Running the App
 
-4. **Start the application in development mode**:
+5. **Start the application in development mode**:
 
    ```bash
    npm run dev
    ```
 
-5. **Wait for the QR Code to appear**.
+6. **Wait for the QR Code to appear**.
 
-6. **Scan the QR Code** with your WhatsApp mobile app.
+7. **Scan the QR Code** with your WhatsApp mobile app.
 
    - Open WhatsApp on your phone.
    - Go to **Settings** > **Linked Devices** > **Link a Device**.
